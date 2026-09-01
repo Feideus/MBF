@@ -6,6 +6,7 @@ import com.mbf.audiosync.dto.TextMapper;
 import com.mbf.audiosync.dto.TextSummaryResponse;
 import com.mbf.audiosync.exception.TextNotFoundException;
 import com.mbf.audiosync.repository.TextRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +20,11 @@ import java.util.UUID;
  */
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class TextService {
 
     private final TextRepository textRepository;
     private final TextMapper textMapper;
-
-    public TextService(TextRepository textRepository, TextMapper textMapper) {
-        this.textRepository = textRepository;
-        this.textMapper = textMapper;
-    }
 
     public List<TextSummaryResponse> listTexts() {
         return textRepository.findAll().stream()

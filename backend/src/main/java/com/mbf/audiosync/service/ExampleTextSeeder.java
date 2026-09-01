@@ -3,11 +3,15 @@ package com.mbf.audiosync.service;
 import com.mbf.audiosync.domain.SourceType;
 import com.mbf.audiosync.domain.Text;
 import com.mbf.audiosync.repository.TextRepository;
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -24,22 +28,20 @@ import java.nio.charset.StandardCharsets;
  * or another scraped work.</p>
  */
 @Component
+@RequiredArgsConstructor
 public class ExampleTextSeeder implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ExampleTextSeeder.class);
 
     private final TextRepository textRepository;
-    private final Resource exampleTextResource;
-    private final Resource exampleCustomResource;
+    private final ResourceLoader resourceLoader;
+    private Resource exampleTextResource;
+    private Resource exampleCustomResource;
 
-    public ExampleTextSeeder(
-            TextRepository textRepository,
-            org.springframework.core.io.ResourceLoader resourceLoader
-    ) {
-        this.textRepository = textRepository;
-        this.exampleTextResource = resourceLoader.getResource(
-                "classpath:seed/the-signal-at-quai-des-brumes.txt");
-        this.exampleCustomResource = resourceLoader.getResource("classpath:seed/philosophy.txt");
+    @PostConstruct
+    void init() {
+        exampleTextResource = resourceLoader.getResource("classpath:seed/the-signal-at-quai-des-brumes.txt");
+        exampleCustomResource =  resourceLoader.getResource("classpath:seed/philosophy.txt");
     }
 
     @Override
