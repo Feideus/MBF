@@ -30,6 +30,7 @@ public class ExampleTextSeeder implements ApplicationRunner {
 
     private final TextRepository textRepository;
     private final Resource exampleTextResource;
+    private final Resource exampleCustomResource;
 
     public ExampleTextSeeder(
             TextRepository textRepository,
@@ -38,6 +39,7 @@ public class ExampleTextSeeder implements ApplicationRunner {
         this.textRepository = textRepository;
         this.exampleTextResource = resourceLoader.getResource(
                 "classpath:seed/the-signal-at-quai-des-brumes.txt");
+        this.exampleCustomResource = resourceLoader.getResource("classpath:seed/philosophy.txt");
     }
 
     @Override
@@ -48,9 +50,16 @@ public class ExampleTextSeeder implements ApplicationRunner {
         }
 
         String content;
+        String content2;
+
         try (var in = exampleTextResource.getInputStream()) {
             content = new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
+
+        try (var in2 = exampleCustomResource.getInputStream()) {
+            content2 = new String(in2.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
 
         Text example = new Text(
                 "The Signal at Quai des Brumes",
@@ -61,7 +70,18 @@ public class ExampleTextSeeder implements ApplicationRunner {
                 content
         );
 
+        Text example2 = new Text(
+                "test Title",
+                "Erwan Ulrich",
+                "en",
+                "Philosophy",
+                SourceType.CUSTOM,
+                content2
+        );
+
         textRepository.save(example);
+        textRepository.save(example2);
         log.info("Seeded example text '{}' ({} words).", example.getTitle(), example.getWordCount());
+        log.info("Seeded example text '{}' ({} words).", example2.getTitle(), example.getWordCount());
     }
 }

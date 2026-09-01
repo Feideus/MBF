@@ -9,5 +9,6 @@ package com.mbf.audiosync.domain;
 public enum SourceType {
     PUBLIC_DOMAIN,
     USER_UPLOAD,
-    COMMUNITY_LIBRARY
+    COMMUNITY_LIBRARY,
+    CUSTOM
 }
